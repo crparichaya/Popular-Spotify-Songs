@@ -1,6 +1,5 @@
 # Popular-Spotify-Songs
-This project aims to create a standalone GUI application using Python and Tkinter to visualize and analyze Popular Spotify Songs data, providing descriptive statistics, correlations, and interactive visualizations to gain insights into music trends. 
-
+This project revolves around a user-friendly GUI application where users can interact with various visualization graphs representing data about Popular Spotify Songs. By clicking through the GUI, users can access information such as distribution graphs, scatter plot, line graphs and bar graphs, offering insights into the characteristics of Spotify songs.
 ### Install and Run
 To run this project locally, follow these steps:
 
