@@ -21,6 +21,7 @@ To run this project locally, follow these steps:
 
 4. **Activate the virtual environment:**
    ```
+   # On MS Windows use .\env\Scripts\activate
    . env/bin/activate
    ```
 
