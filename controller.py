@@ -1,4 +1,3 @@
-# controller.py
 from spotify_ui import SpotifyView
 
 
