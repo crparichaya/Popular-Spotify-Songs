@@ -1,22 +1,33 @@
 import tkinter as tk
-from tkinter import ttk
+from tkinter import ttk, messagebox
 from tkinter import *
 import matplotlib.pyplot as plt
 import seaborn as sns
 from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
+from matplotlib.ticker import FormatStrFormatter
 from file_data import FileData
+
 df = FileData()
 
 
-class SpotifyUI(tk.Tk):
-    def __init__(self):
-        super().__init__()
-        self.title("Spotify Songs")
+class SpotifyView:
+    def __init__(self, controller):
+        self.controller = controller
+        self.root = tk.Tk()
+        self.root.title("Spotify Songs")
         self.init_components()
 
     def init_components(self):
-        self.pages = ttk.Notebook(self)
-        self.pages.pack(pady=10, padx=10, expand=True)
+        notebook_frame = ttk.Frame(self.root)
+        notebook_frame.pack(fill=tk.BOTH, expand=True)
+
+        # Add a Canvas widget
+        canvas = tk.Canvas(notebook_frame)
+        canvas.pack(side=tk.LEFT, fill=tk.BOTH, expand=True)
+
+        # Add a Frame to the Canvas
+        self.pages = ttk.Notebook(canvas)
+        canvas.create_window((0, 0), window=self.pages, anchor='nw')
 
         style = ttk.Style()
         style.theme_use('default')
@@ -25,8 +36,6 @@ class SpotifyUI(tk.Tk):
         # Add pages
         home_page = ttk.Frame(self.pages, style='Black.TNotebook')
         self.home_page(home_page)
-
-        data_story_page = ttk.Frame(self.pages, style='Black.TNotebook')
 
         descriptive_page = ttk.Frame(self.pages, style='Black.TNotebook')
         self.descriptive_page(descriptive_page)
@@ -37,31 +46,38 @@ class SpotifyUI(tk.Tk):
         other_page = ttk.Frame(self.pages, style='Black.TNotebook')
         self.other_graph_page(other_page)
 
+        data_exploration_page = ttk.Frame(self.pages, style='Black.TNotebook')
+        self.data_exploration_page(data_exploration_page)
+
         self.pages.add(home_page, text="Home Page")
-        self.pages.add(data_story_page, text="Data Storytelling")
         self.pages.add(descriptive_page, text="Descriptive Graph")
         self.pages.add(distribution_page, text="Distribution Graph")
         self.pages.add(other_page, text="Other Graphs")
-        self.pages.pack(fill=BOTH, expand=1)
+        self.pages.add(data_exploration_page, text="Data Exploration")
+        self.pages.pack(fill=tk.BOTH, expand=1)
 
     def home_page(self, pages):
         home_frame = ttk.Frame(pages)
         home_frame.pack(fill='both', expand=True)
 
-        home_frame.rowconfigure(0, weight=1)
-        home_frame.rowconfigure(1, weight=1)
-        home_frame.rowconfigure(2, weight=1)
-        home_frame.rowconfigure(3, weight=1)
-        home_frame.rowconfigure(4, weight=1)
-        home_frame.columnconfigure(0, weight=1)
-        home_frame.columnconfigure(1, weight=1)
+        # Adjusted row and column configurations
+        home_frame.grid_columnconfigure(0, weight=1)
+        home_frame.grid_columnconfigure(1, weight=1)
+        home_frame.grid_rowconfigure(0, weight=1)
+        home_frame.grid_rowconfigure(1, weight=1)
+        home_frame.grid_rowconfigure(2, weight=1)
+        home_frame.grid_rowconfigure(3, weight=1)
+        home_frame.grid_rowconfigure(4, weight=1)
+        home_frame.grid_rowconfigure(5, weight=1)
+        home_frame.grid_rowconfigure(6, weight=1)
+        home_frame.grid_rowconfigure(7, weight=1)
 
         style = ttk.Style()
         style.configure("Black.TFrame", background="black")
 
         home_frame.config(style="Black.TFrame")
         bg_label = tk.Label(home_frame, background='black')
-        bg_label.grid(row=0, column=0, sticky='nsew')
+        bg_label.grid(row=0, column=0, columnspan=2, sticky='nsew')
 
         # Load the image
         img_path = 'Spotify_Logo.png'
@@ -75,68 +91,63 @@ class SpotifyUI(tk.Tk):
         # Position the image
         img_label.grid(row=1, column=0, padx=10, pady=10, sticky='nsew')
 
-        text_label = ttk.Label(home_frame, text="What is Spotify", background='black', foreground='white',
-                               font=('Arial', 20))
+        text_label = ttk.Label(home_frame, text="Welcome to Popular Spotify Songs!", background='black',
+                               foreground='white',
+                               font=('Arial', 14))
         text_label.grid(row=2, column=0, padx=10, pady=10, sticky='nsew')
 
-        # Text below the image
-        text_label_1 = ttk.Label(home_frame,
-                                 text="Spotify is a digital music streaming service. It gives you instant access to "
-                                      "its "
-                                      "vast online library of music and podcasts, allowing you to listen to any "
-                                      "content "
-                                      "of your choice at any time.",
-                                 background='black', foreground='white', font=('Arial', 12), wraplength=400,
-                                 justify='center')
-        text_label_1.grid(row=3, column=0, padx=10, pady=10, sticky='nsew')
+        text_label_2 = ttk.Label(home_frame, text="Click to Explore the Data", background='black',
+                                 foreground='white',
+                                 font=('Arial', 14))
+        text_label_2.grid(row=1, column=1, padx=10, pady=10, sticky='nsew')
 
-        text_label_2 = ttk.Label(home_frame,
-                                 text="Welcome to Popular Spotify Songs!",
+        text_label_3 = ttk.Label(home_frame,
+                                 text="Click to see Data Storytelling",
                                  background='black', foreground='white', font=('Arial', 16))
-        text_label_2.grid(row=0, column=1, padx=10, pady=10, sticky='nsew')
-
-        # Navigate to data storytelling page button
-        data_story_button = tk.Button(home_frame, text="Data Storytelling",
-                                      command=lambda: self.show_page("Data Storytelling"),
-                                      width=20, height=2)
-        data_story_button.grid(row=1, column=1, padx=10, pady=10, sticky='nsew')
+        text_label_3.grid(row=4, column=0, padx=10, pady=10, columnspan=2, sticky='nsew')
 
         # Navigate to descriptive graph page button
         descriptive_button = tk.Button(home_frame, text="Descriptive Graph",
                                        command=lambda: self.show_page("Descriptive Graph"),
-                                       width=20, height=4)
-        descriptive_button.grid(row=2, column=1, padx=10, pady=10, sticky='nsew')
+                                       width=20, height=2)
+        descriptive_button.grid(row=5, column=0, padx=10, pady=10, sticky='nsew')
 
         # Navigate to distribution graph page button
         distribution_button = tk.Button(home_frame, text="Distribution Graph",
                                         command=lambda: self.show_page("Distribution Graph"),
                                         width=20, height=2)
-        distribution_button.grid(row=3, column=1, padx=10, pady=10, sticky='nsew')
+        distribution_button.grid(row=6, column=0, padx=10, pady=10, sticky='nsew')
 
         # Navigate to other graphs page button
         other_graphs_button = tk.Button(home_frame, text="Other Graphs",
                                         command=lambda: self.show_page("Other Graphs"),
-                                        width=20, height=4)
-        other_graphs_button.grid(row=4, column=1, padx=10, pady=10, sticky='nsew')
+                                        width=20, height=2)
+        other_graphs_button.grid(row=7, column=0, padx=10, pady=10, sticky='nsew')
+
+        # Navigate to data exploration page button
+        data_exploration_button = tk.Button(home_frame, text="Data Exploration",
+                                            command=lambda: self.show_page("Data Exploration"),
+                                            width=20, height=2)
+        data_exploration_button.grid(row=2, column=1, padx=10, pady=10, sticky='nsew')
+
+        # Exit button
+        exit_button = tk.Button(home_frame, text="Exit", command=quit, width=3, height=1)
+        exit_button.grid(row=8, column=2, padx=10, pady=10, sticky='nsew')
 
     def show_page(self, page_name):
         # switch pages
         if page_name == "Descriptive Graph":
             # Index of the descriptive_page tab
-            self.pages.select(2)
+            self.pages.select(1)
         elif page_name == "Distribution Graph":
             # Index of the distribution_page tab
-            self.pages.select(3)
-        elif page_name == "Data Storytelling":
-            # Index of the data_story_page tab
-            self.pages.select(1)
+            self.pages.select(2)
         elif page_name == "Other Graphs":
             # Index of the other_page tab
+            self.pages.select(3)
+        elif page_name == "Data Exploration":
+            # Index of the data_exploration_page tab
             self.pages.select(4)
-
-    def data_story_telling_page(self, pages):
-        data_frame = ttk.Frame(pages)
-        data_frame.pack(fill='both', expand=True)
 
     def descriptive_page(self, pages):
         frame = ttk.Frame(pages)
@@ -268,13 +279,13 @@ class SpotifyUI(tk.Tk):
             if selected_graph_type == "Bar Graph":
                 self.plot_high_danceability_bar()
             elif selected_graph_type == "Line Graph":
-                self.plot_playlist_counts_line()
+                self.plot_high_danceability_playlist_counts_line()
 
         # Bind the selection event
         self.graph_type_combobox.bind("<<ComboboxSelected>>", on_select)
 
     def plot_high_danceability_bar(self):
-        high_danceability_threshold = 0.8  # Define your threshold
+        high_danceability_threshold = 70
 
         # Filter the DataFrame to get high danceability songs
         high_danceability_songs = df.data[df.data['danceability_%'] >= high_danceability_threshold]
@@ -300,8 +311,12 @@ class SpotifyUI(tk.Tk):
         canvas.draw()
         canvas.get_tk_widget().pack(fill='both', expand=True)
 
-    def plot_playlist_counts_line(self):
-        filtered_df = df.data[(df.data['released_year'] >= 2013) & (df.data['released_year'] <= 2023)]
+    def plot_high_danceability_playlist_counts_line(self):
+        # Filter DataFrame for high danceability songs released between 2013 and 2023
+        filtered_df = df.data[
+            (df.data['released_year'] >= 2013) & (df.data['released_year'] <= 2023) & (df.data['danceability_%'] > 0.7)]
+
+        # Group by released year and sum the songs included in Spotify playlists
         playlist_counts = filtered_df.groupby('released_year')['in_spotify_playlists'].sum()
 
         # Clear previous graph
@@ -311,7 +326,7 @@ class SpotifyUI(tk.Tk):
         # Plot new graph
         fig, ax = plt.subplots(figsize=(8, 4), facecolor='white')  # Adjust the size as needed
         ax.plot(playlist_counts.index, playlist_counts.values, marker='o', linestyle='-')
-        ax.set_title('Number of Songs Released and Included in Spotify Playlists (2013-2023)')
+        ax.set_title('Number of High Danceability Songs Released and Included in Spotify Playlists (2013-2023)')
         ax.set_xlabel('Year')
         ax.set_ylabel('Number of Songs')
         ax.grid(True)
@@ -323,3 +338,166 @@ class SpotifyUI(tk.Tk):
         canvas = FigureCanvasTkAgg(fig, master=self.graph_frame)
         canvas.draw()
         canvas.get_tk_widget().pack(fill='both', expand=True)
+
+    def data_exploration_page(self, pages):
+        frame = ttk.Frame(pages)
+        frame.pack(fill='both', expand=True)
+
+        bg_label = tk.Label(frame, background='black')
+        bg_label.place(relwidth=1, relheight=1)
+
+        # Get numerical columns excluding 'released_year'
+        numerical_columns = df.data.select_dtypes(include=['int64', 'float64']).columns.tolist()
+        numerical_columns.remove('released_year')  # Remove 'released_year'
+
+        # Create labels and comboboxes for selecting features, graph type, and year range
+        ttk.Label(frame, text="Select Feature:", background='black', foreground='white').grid(row=0, column=0, padx=10,
+                                                                                              pady=5)
+
+        self.feature_combobox = ttk.Combobox(frame, values=numerical_columns, state="readonly")
+        self.feature_combobox.grid(row=0, column=1, padx=10, pady=5)
+
+        ttk.Label(frame, text="Select Graph Type:", background='black', foreground='white').grid(row=1, column=0,
+                                                                                                 padx=10, pady=5)
+        self.graph_combobox = ttk.Combobox(frame, values=["Bar Graph", "Line Graph", "Scatter Plot"],
+                                           state="readonly")
+        self.graph_combobox.grid(row=1, column=1, padx=10, pady=5)
+
+        ttk.Label(frame, text="Select Start Year:", background='black', foreground='white').grid(row=2, column=0,
+                                                                                                 padx=10, pady=5)
+        start_year = ttk.Combobox(frame, values=list(range(2000, 2025)), state="readonly")
+        start_year.grid(row=2, column=1, padx=10, pady=5)
+
+        ttk.Label(frame, text="Select End Year:", background='black', foreground='white').grid(row=3, column=0,
+                                                                                               padx=10, pady=5)
+        end_year = ttk.Combobox(frame, values=list(range(2000, 2025)), state="readonly")
+        end_year.grid(row=3, column=1, padx=10, pady=5)
+
+        # Button to generate graph
+        generate_button = tk.Button(frame, text="Generate",
+                                    command=lambda: self.generate_graph(start_year.get(), end_year.get()))
+        generate_button.grid(row=4, column=0, columnspan=2, pady=10)
+
+        # Clear Graph button
+        clear_button = tk.Button(frame, text="Clear", command=self.clear_graph)
+        clear_button.grid(row=4, column=1, columnspan=2, pady=5)
+
+        # Frame to display the generated graph
+        self.graph_frame_2 = ttk.Frame(frame)
+        self.graph_frame_2.grid(row=1, column=2, columnspan=2, padx=10, pady=5, sticky='nsew')
+
+        # Function to validate selected years
+        def validate_years():
+            if start_year.get() and end_year.get():
+                start = int(start_year.get())
+                end = int(end_year.get())
+                if end < start:
+                    # End year must be later than start year
+                    messagebox.showerror("Error", "End year must be later than start year.")
+                    return False
+            return True
+
+        # Update generate_button command to include validation
+        generate_button.config(
+            command=lambda: self.generate_graph(start_year.get(), end_year.get()) if validate_years() else None)
+
+    def generate_graph(self, start_year, end_year):
+        selected_feature = self.feature_combobox.get()
+        selected_graph_type = self.graph_combobox.get()
+
+        if selected_feature and selected_graph_type and start_year and end_year:
+            if selected_graph_type == "Bar Graph":
+                self.plot_bar_graph(selected_feature, int(start_year), int(end_year))
+            elif selected_graph_type == "Line Graph":
+                self.plot_line_graph(selected_feature, int(start_year), int(end_year))
+            elif selected_graph_type == "Scatter Plot":
+                self.plot_scatter_plot(selected_feature, int(start_year), int(end_year))
+
+    def clear_graph(self):
+        # Destroy all widgets inside the graph frame
+        for widget in self.graph_frame_2.winfo_children():
+            widget.destroy()
+
+    def plot_bar_graph(self, feature, start_year, end_year):
+        # Clear previous graph
+        for widget in self.graph_frame_2.winfo_children():
+            widget.destroy()
+
+        # Filter data based on selected year range
+        filtered_data = df.data[
+            (df.data['released_year'] >= start_year) & (df.data['released_year'] <= end_year)]
+
+        # Aggregate the data by the selected feature and calculate the mean of 'energy%'
+        aggregated_data = filtered_data.groupby(feature)['energy_%'].mean()
+
+        # Plot new graph comparing the with "energy%"
+        fig, ax = plt.subplots(figsize=(6, 4))
+        aggregated_data.plot(kind='bar', ax=ax)
+        ax.set_title(f'Bar Graph of {feature} Compared to Energy% (from {start_year} to {end_year})')
+        ax.set_xlabel(feature)
+        ax.set_ylabel('Mean Energy %')
+        ax.grid(True)
+
+        # matplotlib figure into Tkinter frame
+        canvas = FigureCanvasTkAgg(fig, master=self.graph_frame_2)
+        canvas.draw()
+        canvas.get_tk_widget().pack(fill='both', expand=True)
+
+    def plot_line_graph(self, feature, start_year, end_year):
+        # Clear previous graph
+        for widget in self.graph_frame_2.winfo_children():
+            widget.destroy()
+
+        # Filter data based on selected year range
+        filtered_data = df.data[
+            (df.data['released_year'] >= start_year) & (df.data['released_year'] <= end_year)].copy()
+
+        # Convert 'released_year' to integers using .loc
+        filtered_data.loc[:, 'released_year'] = filtered_data['released_year'].astype(int)
+
+        # Plot new graph
+        fig, ax = plt.subplots(figsize=(6, 4))  # Adjusted size to 6x4 inches
+        line_plot = filtered_data.groupby('released_year')[feature].mean().plot(marker='o', linestyle='-', ax=ax)
+        ax.set_title(f'Line Graph of {feature} Over Years ( from {start_year} to {end_year})')
+        ax.set_xlabel('Year')
+        ax.set_ylabel(feature)
+        ax.grid(True)
+
+        # Convert x-axis tick labels to integers
+        ax.xaxis.set_major_formatter(FormatStrFormatter('%d'))
+
+        # matplotlib figure into Tkinter frame
+        canvas = FigureCanvasTkAgg(fig, master=self.graph_frame_2)
+        canvas.draw()
+        canvas.get_tk_widget().pack(fill='both', expand=True)
+
+    def plot_scatter_plot(self, feature, start_year, end_year):
+        # Clear previous graph
+        for widget in self.graph_frame_2.winfo_children():
+            widget.destroy()
+
+        # Filter data based on selected year range
+        filtered_data = df.data[
+            (df.data['released_year'] >= start_year) & (df.data['released_year'] <= end_year)]
+
+        # Plot new graph
+        fig, ax = plt.subplots(figsize=(6, 4))  # Adjusted size to 5x3 inches
+        ax.scatter(filtered_data['danceability_%'], filtered_data[feature], alpha=0.5)
+        ax.set_title(f'Scatter Plot of {feature} vs. Danceability% (from {start_year} to {end_year})')
+        ax.set_xlabel('Danceability %')
+        ax.set_ylabel(feature)
+        ax.grid(True)
+
+        # Set transparent background color
+        fig.patch.set_facecolor('none')
+
+        # Adjust layout to remove empty space
+        plt.tight_layout(pad=0)
+
+        # matplotlib figure into Tkinter frame
+        canvas = FigureCanvasTkAgg(fig, master=self.graph_frame_2)
+        canvas.draw()
+        canvas.get_tk_widget().pack(fill='both', expand=True)
+
+
+

@@ -1,5 +1,5 @@
-from spotify_ui import SpotifyUI
+from controller import SpotifyController
 
-if __name__ == '__main__':
-    UI = SpotifyUI()
-    UI.mainloop()
+if __name__ == "__main__":
+    controller = SpotifyController()
+    controller.run()
