@@ -456,7 +456,7 @@ class SpotifyView:
         filtered_data.loc[:, 'released_year'] = filtered_data['released_year'].astype(int)
 
         # Plot new graph
-        fig, ax = plt.subplots(figsize=(6, 4))  # Adjusted size to 6x4 inches
+        fig, ax = plt.subplots(figsize=(6, 4))  # Adjust the size
         line_plot = filtered_data.groupby('released_year')[feature].mean().plot(marker='o', linestyle='-', ax=ax)
         ax.set_title(f'Line Graph of {feature} Over Years ( from {start_year} to {end_year})')
         ax.set_xlabel('Year')
