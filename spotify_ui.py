@@ -299,7 +299,7 @@ class SpotifyView:
             widget.destroy()
 
         # Plot new graph
-        fig, ax = plt.subplots(figsize=(6, 4), facecolor='white')  # Adjust the size as needed
+        fig, ax = plt.subplots(figsize=(6, 4), facecolor='white')  # Adjust the size
         ax.bar(['Total Songs', 'High Danceability Songs'], [total_songs, high_danceability_count],
                color=['lightblue', 'salmon'])
         ax.set_title('Percentage of High Danceability Songs')
@@ -324,7 +324,7 @@ class SpotifyView:
             widget.destroy()
 
         # Plot new graph
-        fig, ax = plt.subplots(figsize=(8, 4), facecolor='white')  # Adjust the size as needed
+        fig, ax = plt.subplots(figsize=(8, 4), facecolor='white')  # Adjust the size
         ax.plot(playlist_counts.index, playlist_counts.values, marker='o', linestyle='-')
         ax.set_title('Number of High Danceability Songs Released and Included in Spotify Playlists (2013-2023)')
         ax.set_xlabel('Year')
@@ -481,7 +481,7 @@ class SpotifyView:
             (df.data['released_year'] >= start_year) & (df.data['released_year'] <= end_year)]
 
         # Plot new graph
-        fig, ax = plt.subplots(figsize=(6, 4))  # Adjusted size to 5x3 inches
+        fig, ax = plt.subplots(figsize=(6, 4))  # Adjusted size
         ax.scatter(filtered_data['danceability_%'], filtered_data[feature], alpha=0.5)
         ax.set_title(f'Scatter Plot of {feature} vs. Danceability% (from {start_year} to {end_year})')
         ax.set_xlabel('Danceability %')
