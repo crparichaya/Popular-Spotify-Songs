@@ -1,4 +1,4 @@
-# Spotify Songs Visualization and Analysis
+# Popular Spotify Songs
 
 ## Summary
 This project aims to create a standalone GUI application using Python and Tkinter to visualize and analyze Popular Spotify Songs data. It provides descriptive statistics, correlations, and interactive visualizations to gain insights into music trends.
