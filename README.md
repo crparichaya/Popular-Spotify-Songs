@@ -28,7 +28,7 @@ This project aims to create a standalone GUI application using Python and Tkinte
 ## Demonstration video
 [Link to Demonstration video](https://youtu.be/XTmToobbfJI?si=XL4hMEi7nZtnB-pV)
 
-## Wiki
+## Wiki Page
 [Link to Wiki](https://github.com/crparichaya/Popular-Spotify-Songs/wiki)
 
 ### Install and Run
